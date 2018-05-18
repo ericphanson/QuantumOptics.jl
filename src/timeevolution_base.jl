@@ -94,10 +94,12 @@ end
 Integrate using StochasticDiffEq
 """
 function integrate_stoch(tspan::Vector{Float64}, df::Function, dg::Function, x0::Vector{Complex128},
-            state::T, dstate::T, fout::Function, n::Int;
+            state::T, dstate::T, fout::Function;
             save_everystep = false, callback=nothing,
-            alg = nothing, noise_rate_prototype = Array{Complex128}(length(state), n),
-            noise=StochasticDiffEq.RealWienerProcess(0.0, randn(n)),
+            alg::StochasticDiffEq.StochasticDiffEqAlgorithm = StochasticDiffEq.LambaEulerHeun(),
+            noise_rate_prototype = nothing,
+            noise_prototype_c = nothing,
+            noise=nothing,
             kwargs...) where T
 
     function df_(dx::Vector{Complex128}, x::Vector{Complex128}, p, t)
@@ -110,13 +112,19 @@ function integrate_stoch(tspan::Vector{Float64}, df::Function, dg::Function, x0:
     function dg_(dx::Union{Vector{Complex128}, Array{Complex128, 2}},
                 x::Vector{Complex128}, p, t)
         recast!(x, state)
-        dg(dx, t, state, dstate, n)
+        dg(dx, t, state, dstate, n - nc)
     end
 
     function fout_(x::Vector{Complex128}, t::Float64, integrator)
         recast!(x, state)
         fout(t, state)
     end
+
+    n = isa(noise_rate_prototype, Void) ? 0 : size(noise_rate_prototype)[2]
+    if isa(noise, Void) && n > 0
+        noise = StochasticDiffEq.RealWienerProcess(0.0, randn(n))
+    end
+    nc = isa(noise_prototype_c, Void) ? 0 : size(noise_prototype_c)[2]
 
     out_type = pure_inference(fout, Tuple{eltype(tspan),typeof(state)})
 
@@ -128,28 +136,13 @@ function integrate_stoch(tspan::Vector{Float64}, df::Function, dg::Function, x0:
 
     full_cb = OrdinaryDiffEq.CallbackSet(callback, scb)
 
-    if n == 1
-        prob = StochasticDiffEq.SDEProblem{true}(df_, dg_, x0,(tspan[1],tspan[end]),
-                    noise=noise)
-    else
-        prob = StochasticDiffEq.SDEProblem{true}(df_, dg_, x0,(tspan[1],tspan[end]),
-                noise=noise, noise_rate_prototype=noise_rate_prototype)
-    end
-
-    if isa(alg, Void)
-        if n == 1
-            alg_ = StochasticDiffEq.RKMil(interpretation=:Stratonovich)
-        else
-            alg_ = StochasticDiffEq.LambaEulerHeun()
-        end
-    else
-        @assert isa(alg, StochasticDiffEq.StochasticDiffEqAlgorithm)
-        alg_ = alg
-    end
+    prob = StochasticDiffEq.SDEProblem{true}(df_, dg_, x0,(tspan[1],tspan[end]),
+                    noise=noise,
+                    noise_rate_prototype=noise_rate_prototype)
 
     sol = StochasticDiffEq.solve(
                 prob,
-                alg_;
+                alg;
                 reltol = 1.0e-4,
                 abstol = 1.0e-4,
                 save_everystep = false, save_start = false,
@@ -165,11 +158,11 @@ end
 Define fout if it was omitted.
 """
 function integrate_stoch(tspan::Vector{Float64}, df::Function, dg::Function, x0::Vector{Complex128},
-    state::T, dstate::T, ::Void, n::Int; kwargs...) where T
+    state::T, dstate::T, ::Void; kwargs...) where T
     function fout(t::Float64, state::T)
         copy(state)
     end
-    integrate_stoch(tspan, df, dg, x0, state, dstate, fout, n; kwargs...)
+    integrate_stoch(tspan, df, dg, x0, state, dstate, fout; kwargs...)
 end
 
 

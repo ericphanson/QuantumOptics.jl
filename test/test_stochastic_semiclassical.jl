@@ -45,8 +45,14 @@ function fquantum_stoch(t, psi, u)
     Hs
 end
 function fclassical_stoch(t, psi, u, du)
+    du[1] = 0.2*u[1]
     du[2] = 0.2*u[2]
 end
+function fclassical_stoch2(t, psi, u, du)
+    du[1,1] = 0.2*u[1]
+    du[2,2] = 0.2*u[2]
+end
+
 
 # Function definitions for master_semiclassical
 function fquantum_master(t, rho, u)
@@ -69,13 +75,14 @@ end
 tout, ψt_sc = stochastic.schroedinger_semiclassical(T_short, ψ_sc, fquantum, fclassical;
             fstoch_quantum=fquantum_stoch)
 tout, ψt_sc = stochastic.schroedinger_semiclassical(T_short, ψ_sc, fquantum, fclassical;
-            fstoch_classical=fclassical_stoch, noise_processes=1)
+            fstoch_classical=fclassical_stoch)
 tout, ψt_sc = stochastic.schroedinger_semiclassical(T_short, ψ_sc, fquantum, fclassical;
-            fstoch_quantum=fquantum_stoch, fstoch_classical=fclassical_stoch)
+            fstoch_quantum=fquantum_stoch, fstoch_classical=fclassical_stoch2,
+            noise_prototype_c=zeros(Complex128, 2,2))
 
 # Semiclassical master
 tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fclassical;
-            fstoch_quantum=fstoch_q_master, noise_processes=1)
+            fstoch_quantum=fstoch_q_master)
 tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fclassical;
             fstoch_classical=fclassical_stoch)
 tout, ρt = stochastic.master_semiclassical(T_short, ψ_sc, fquantum_master, fclassical;
@@ -127,6 +134,8 @@ tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fcl
 
 # Test error messages
 @test_throws ArgumentError stochastic.schroedinger_semiclassical(T, ψ_sc, fquantum, fclassical)
+@test_throws ArgumentError stochastic.schroedinger_semiclassical(T, ψ_sc, fquantum, fclassical;
+        fstoch_quantum=fquantum_stoch, fstoch_classical=fclassical_stoch)
 @test_throws ArgumentError stochastic.master_semiclassical(T, ρ_sc, fquantum_master, fclassical)
 @test_throws ArgumentError stochastic.master_semiclassical(T, ρ_sc, fquantum_master, fclassical;
             fstoch_classical=fclassical_stoch, rates_s=rates_mat)

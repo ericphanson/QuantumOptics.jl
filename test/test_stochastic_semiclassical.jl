@@ -86,18 +86,22 @@ tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fcl
 tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fclassical;
             fstoch_classical=fclassical_stoch)
 tout, ρt = stochastic.master_semiclassical(T_short, ψ_sc, fquantum_master, fclassical;
-            fstoch_quantum=fstoch_q_master2, fstoch_classical=fclassical_stoch)
+            fstoch_quantum=fstoch_q_master2, fstoch_classical=fclassical_stoch2,
+            noise_prototype_c=zeros(Complex128, 2, 2))
 tout, ρt = stochastic.master_semiclassical(T_short, ψ_sc, fquantum_master, fclassical;
-            fstoch_quantum=fstoch_q_master, fstoch_classical=fclassical_stoch)
+            fstoch_quantum=fstoch_q_master, fstoch_classical=fclassical_stoch2, noise_prototype_c=zeros(Complex128, 2, 2))
 tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fclassical;
-            fstoch_classical=fclassical_stoch,
-            fstoch_H=fquantum_stoch)
+            fstoch_classical=fclassical_stoch2,
+            fstoch_H=fquantum_stoch,
+            noise_prototype_c=zeros(Complex128, 2, 2))
 tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fclassical;
-            fstoch_classical=fclassical_stoch,
-            fstoch_J=fstoch_J)
+            fstoch_classical=fclassical_stoch2,
+            fstoch_J=fstoch_J,
+            noise_prototype_c=zeros(Complex128, 2, 2))
 tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fclassical;
-            fstoch_classical=fclassical_stoch,
-            fstoch_J=fstoch_q_master2)
+            fstoch_classical=fclassical_stoch2,
+            fstoch_J=fstoch_q_master2,
+            noise_prototype_c=zeros(Complex128, 2, 2))
 tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fclassical;
             fstoch_quantum=fstoch_q_master2)
 tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fclassical;
@@ -111,22 +115,27 @@ tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fcl
 
 # Test linear version
 tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fclassical;
-            fstoch_quantum=fstoch_q_master, noise_processes=1, nonlinear=false)
+            fstoch_quantum=fstoch_q_master, nonlinear=false)
 tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fclassical;
             fstoch_classical=fclassical_stoch, nonlinear=false)
 tout, ρt = stochastic.master_semiclassical(T_short, ψ_sc, fquantum_master, fclassical;
-            fstoch_quantum=fstoch_q_master2, fstoch_classical=fclassical_stoch, nonlinear=false)
+            fstoch_quantum=fstoch_q_master2, fstoch_classical=fclassical_stoch2,
+            noise_prototype_c=zeros(Complex128, 2, 2), nonlinear=false)
 tout, ρt = stochastic.master_semiclassical(T_short, ψ_sc, fquantum_master, fclassical;
-            fstoch_quantum=fstoch_q_master, fstoch_classical=fclassical_stoch, nonlinear=false)
+            fstoch_quantum=fstoch_q_master, fstoch_classical=fclassical_stoch2,
+            noise_prototype_c=zeros(Complex128, 2, 2), nonlinear=false)
 tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fclassical;
-            fstoch_classical=fclassical_stoch,
-            fstoch_H=fquantum_stoch, nonlinear=false)
+            fstoch_classical=fclassical_stoch2,
+            fstoch_H=fquantum_stoch,
+            noise_prototype_c=zeros(Complex128, 2, 2), nonlinear=false)
 tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fclassical;
-            fstoch_classical=fclassical_stoch,
-            fstoch_J=fstoch_J, nonlinear=false)
+            fstoch_classical=fclassical_stoch2,
+            fstoch_J=fstoch_J,
+            noise_prototype_c=zeros(Complex128, 2, 2), nonlinear=false)
 tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fclassical;
-            fstoch_classical=fclassical_stoch,
-            fstoch_J=fstoch_q_master2, nonlinear=false)
+            fstoch_classical=fclassical_stoch2,
+            fstoch_J=fstoch_q_master2,
+            noise_prototype_c=zeros(Complex128, 2, 2), nonlinear=false)
 tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fclassical;
             fstoch_quantum=fstoch_q_master2, nonlinear=false)
 tout, ρt = stochastic.master_semiclassical(T_short, ρ_sc, fquantum_master, fclassical;

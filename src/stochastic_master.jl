@@ -253,6 +253,8 @@ function dwiseman_nl(rho::DenseOperator, rates::Vector{Float64}, J::Vector,
     drho.data .-= rates[i]*(expect(J[i], rho) + expect(Jdagger[i], rho))*rho.data
 end
 
+# TODO: Remove unnecessary recast!(drho, dx)
+
 # Derivative functions
 function dmaster_stochastic(dx::Vector{Complex128}, rho::DenseOperator, H::Void, rates::DecayRates,
             J::Vector, Jdagger::Vector, drho::DenseOperator, ::Int)

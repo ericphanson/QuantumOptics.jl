@@ -94,6 +94,8 @@ function schroedinger_dynamic(tspan, psi0::Ket, fdeterm::Function, fstoch::Funct
     integrate_stoch(tspan, dschroedinger_determ, dschroedinger_stoch, x0, state, dstate, fout, n; kwargs...)
 end
 
+# TODO: Remove unnecessary recast!(dpsi, dx)
+
 function dschroedinger_stochastic(dx::Vector{Complex128}, psi::Ket, Hs::Vector{T},
             dpsi::Ket, index::Int) where T <: Operator
     check_schroedinger(psi, Hs[index])

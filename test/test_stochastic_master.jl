@@ -118,6 +118,7 @@ tout, ρt = stochastic.master_dynamic(T_short, ρ0, fdeterm_master, fstoch4_mast
 
 # Test error messages
 @test_throws ArgumentError stochastic.master(T, ψ0, H, [sm, sm], [sm, sm]; rates_s=rates_mat)
-@test_throws ArgumentError stochastic.master_dynamic(T, ψ0, fdeterm_master, fstoch1_master; rates_s=rates_mat)
+@test_throws ArgumentError stochastic.master_dynamic(T, ψ0, fdeterm_master, fstoch1_master;
+                                                    rates_s=rates_mat)
 
 end # testset

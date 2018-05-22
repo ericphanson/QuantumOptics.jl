@@ -33,8 +33,6 @@ function schroedinger(tspan, psi0::Ket, H::Operator, Hs::Vector;
     tspan_ = convert(Vector{Float64}, tspan)
 
     n = length(Hs)
-    noise_rate_prototype = n == 1 ? nothing : zeros(Complex128, length(psi0), n)
-
     dstate = copy(psi0)
     x0 = psi0.data
     state = copy(psi0)
@@ -44,8 +42,8 @@ function schroedinger(tspan, psi0::Ket, H::Operator, Hs::Vector;
     dschroedinger_stoch(dx::DiffArray,
             t::Float64, psi::Ket, dpsi::Ket, n::Int) = dschroedinger_stochastic(dx, psi, Hs, dpsi, n)
 
-    integrate_stoch(tspan_, dschroedinger_determ, dschroedinger_stoch, x0, state, dstate, fout;
-                noise_rate_prototype=noise_rate_prototype, kwargs...)
+    integrate_stoch(tspan_, dschroedinger_determ, dschroedinger_stoch, x0, state, dstate, fout, n;
+                    kwargs...)
 end
 schroedinger(tspan, psi0::Ket, H::Operator, Hs::Operator; kwargs...) = schroedinger(tspan, psi0, H, [Hs]; kwargs...)
 
@@ -84,7 +82,6 @@ function schroedinger_dynamic(tspan, psi0::Ket, fdeterm::Function, fstoch::Funct
     else
         n = noise_processes
     end
-    noise_rate_prototype = n == 1 ? nothing : zeros(Complex128, length(psi0), n)
 
     dstate = copy(psi0)
     x0 = psi0.data
@@ -95,19 +92,16 @@ function schroedinger_dynamic(tspan, psi0::Ket, fdeterm::Function, fstoch::Funct
             t::Float64, psi::Ket, dpsi::Ket, n::Int) =
         dschroedinger_stochastic(dx, t, psi, fstoch, dpsi, n)
 
-    integrate_stoch(tspan, dschroedinger_determ, dschroedinger_stoch, x0, state, dstate, fout;
-            noise_rate_prototype=noise_rate_prototype,
+    integrate_stoch(tspan, dschroedinger_determ, dschroedinger_stoch, x0, state, dstate, fout, n;
             kwargs...)
 end
 
-# TODO: Remove unnecessary recast!(dpsi, dx)
 
 function dschroedinger_stochastic(dx::Vector{Complex128}, psi::Ket, Hs::Vector{T},
             dpsi::Ket, index::Int) where T <: Operator
     check_schroedinger(psi, Hs[index])
     recast!(dx, dpsi)
     dschroedinger(psi, Hs[index], dpsi)
-    recast!(dpsi, dx)
 end
 function dschroedinger_stochastic(dx::Array{Complex128, 2}, psi::Ket, Hs::Vector{T},
             dpsi::Ket, n::Int) where T <: Operator
@@ -125,7 +119,7 @@ function dschroedinger_stochastic(dx::DiffArray,
     dschroedinger_stochastic(dx, psi, ops, dpsi, n)
 end
 
-recast!(psi::StateVector, x::SubArray{Complex128, 1}) = nothing #(x .= psi.data)
+recast!(psi::StateVector, x::SubArray{Complex128, 1}) = (x .= psi.data)
 recast!(x::SubArray{Complex128, 1}, psi::StateVector) = (psi.data = x)
 
 end # module

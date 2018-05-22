@@ -96,7 +96,7 @@ Integrate using StochasticDiffEq
 function integrate_stoch(tspan::Vector{Float64}, df::Function, dg::Function, x0::Vector{Complex128},
             state::T, dstate::T, fout::Function, n::Int;
             save_everystep = false, callback=nothing,
-            alg::StochasticDiffEq.StochasticDiffEqAlgorithm = StochasticDiffEq.LambaEulerHeun(),
+            alg = nothing,
             noise_rate_prototype = nothing,
             noise_prototype_classical = nothing,
             noise=nothing,

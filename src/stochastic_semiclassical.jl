@@ -275,7 +275,6 @@ function dschroedinger_stochastic(dx::Array{Complex128, 2}, t::Float64, state::S
 
     dx_i = @view dx[length(state.quantum)+1:end, n+1:end]
     fstoch_classical(t, state.quantum, state.classical, dx_i)
-    # recast!(dstate, dx_i)
 end
 
 function dmaster_stoch_dynamic(dx::Vector{Complex128}, t::Float64,
@@ -317,10 +316,8 @@ function dmaster_stoch_dynamic(dx::DiffArray, t::Float64,
             state::State{DenseOperator}, fstoch_quantum::Void,
             fstoch_classical::Function,
             rates_s::DecayRates, dstate::State{DenseOperator}, ::Int)
-    # recast!(dx, dstate)
     dclassical = @view dx[length(state.quantum)+1:end, :]
     fstoch_classical(t, state.quantum, state.classical, dclassical)
-    # recast!(dstate, dx)
 end
 function dmaster_stoch_dynamic(dx::Array{Complex128, 2}, t::Float64,
             state::State{DenseOperator}, fstoch_quantum::Function,

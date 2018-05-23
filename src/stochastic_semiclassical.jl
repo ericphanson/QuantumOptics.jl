@@ -40,10 +40,15 @@ Integrate time-dependent Schrödinger equation coupled to a classical system.
         normalized nor permanent!
 * `noise_processes=0`: Number of distinct white-noise processes in the equation.
         This number has to be equal to the total number of noise operators
-        returned by `fstoch_quantum`. Add 1 if `fstoch_classical` is specificed.
-        If unset, the number is automatically calculated from function outputs.
+        returned by `fstoch`. If unset, the number is calculated automatically
+        from the function output.
         NOTE: Set this number if you want to avoid an initial calculation of
-        function outputs!
+        the function output!
+* `noise_prototype_classical=nothing`: The equivalent of the optional argument
+        `noise_rate_prototype` in `StochasticDiffEq` for the classical
+        stochastic function `fstoch_classical` only. Must be set for
+        non-diagonal classical noise or combinations of quantum and classical
+        noise. See the documentation for details.
 * `kwargs...`: Further arguments are passed on to the ode solver.
 """
 function schroedinger_semiclassical(tspan, state0::State{Ket}, fquantum::Function,
@@ -129,13 +134,18 @@ non-hermitian Hamiltonian and then calls master_nh which is slightly faster.
         be changed.
 * `noise_processes=0`: Number of distinct white-noise processes in the equation.
         This number has to be equal to the total number of noise operators
-        returned by all stochastic functions. Add 1 for classical noise.
-        If unset, the number is calculated automatically from the function outputs.
+        returned by `fstoch`. If unset, the number is calculated automatically
+        from the function output.
         NOTE: Set this number if you want to avoid an initial calculation of
-        function outputs!
+        the function output!
+* `noise_prototype_classical=nothing`: The equivalent of the optional argument
+        `noise_rate_prototype` in `StochasticDiffEq` for the classical
+        stochastic function `fstoch_classical` only. Must be set for
+        non-diagonal classical noise or combinations of quantum and classical
+        noise. See the documentation for details.
 * `nonlinear=true`: Specify whether or not to include the nonlinear term
         `expect(Js[i] + Jsdagger[i],rho)*rho` in the equation. This ensures
-        the trace of `rho` is conserved.
+        that the trace of `rho` is conserved.
 * `kwargs...`: Further arguments are passed on to the ode solver.
 """
 function master_semiclassical(tspan::Vector{Float64}, rho0::State{DenseOperator},

@@ -82,7 +82,7 @@ function schroedinger_semiclassical(tspan, state0::State{Ket}, fquantum::Functio
 
     if n > 0 && isa(fstoch_classical, Function)
         if isa(noise_prototype_classical, Void)
-            throw(ArgumentError("noise_prototype_classical needs to be set for combinations of quantum and claisscal noise!"))
+            throw(ArgumentError("noise_prototype_classical must be set for combinations of quantum and classical noise!"))
         end
     end
 
@@ -188,7 +188,7 @@ function master_semiclassical(tspan::Vector{Float64}, rho0::State{DenseOperator}
 
     if n > 0 && isa(fstoch_classical, Function)
         if isa(noise_prototype_classical, Void)
-            throw(ArgumentError("noise_prototype_classical needs to be set for combinations of quantum and claisscal noise!"))
+            throw(ArgumentError("noise_prototype_classical must be set for combinations of quantum and classical noise!"))
         end
     end
 

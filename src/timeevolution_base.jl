@@ -122,11 +122,7 @@ function integrate_stoch(tspan::Vector{Float64}, df::Function, dg::Function, x0:
 
     nc = isa(noise_prototype_classical, Void) ? 0 : size(noise_prototype_classical)[2]
     if isa(noise, Void) && n > 0
-        if n == 1 && nc == 0
-            noise_ = StochasticDiffEq.RealWienerProcess(0.0, randn())
-        else
-            noise_ = StochasticDiffEq.RealWienerProcess!(0.0, randn(n + nc))
-        end
+        noise_ = StochasticDiffEq.RealWienerProcess!(0.0, randn(n + nc))
     else
         noise_ = noise
     end

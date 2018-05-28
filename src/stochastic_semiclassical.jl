@@ -38,7 +38,7 @@ Integrate time-dependent Schrödinger equation coupled to a classical system.
 * `fout=nothing`: If given, this function `fout(t, state)` is called every time
         an output should be displayed. ATTENTION: The given state is neither
         normalized nor permanent!
-* `noise_processes=0`: Number of distinct white-noise processes in the equation.
+* `noise_processes=0`: Number of distinct quantum noise processes in the equation.
         This number has to be equal to the total number of noise operators
         returned by `fstoch`. If unset, the number is calculated automatically
         from the function output.
@@ -132,7 +132,7 @@ non-hermitian Hamiltonian and then calls master_nh which is slightly faster.
         an output should be displayed. ATTENTION: The given state rho is not
         permanent! It is still in use by the ode solver and therefore must not
         be changed.
-* `noise_processes=0`: Number of distinct white-noise processes in the equation.
+* `noise_processes=0`: Number of distinct quantum noise processes in the equation.
         This number has to be equal to the total number of noise operators
         returned by `fstoch`. If unset, the number is calculated automatically
         from the function output.

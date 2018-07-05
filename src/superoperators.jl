@@ -151,7 +151,7 @@ For operators ``A``, ``B`` the relation
 
 holds. `op` can be a dense or a sparse operator.
 """
-spost(op::Operator) = SuperOperator((op.basis_r, op.basis_r), (op.basis_l, op.basis_l), kron(transpose(op.data), identityoperator(op).data))
+spost(op::Operator) = SuperOperator((op.basis_r, op.basis_r), (op.basis_l, op.basis_l), kron(transpose(op.data), transpose(identityoperator(op).data)))
 
 
 function _check_input(H::Operator, J::Vector, Jdagger::Vector, rates::Union{Vector{Float64}, Matrix{Float64}})
